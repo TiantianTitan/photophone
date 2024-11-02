@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Submit from './pages/Submit';
 import Settings from './pages/Settings';
 import PostsOuverts from './pages/PostsOuverts';
+import Contact from './pages/Contact';
 // import NotFound from './components/Not-found';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/submit" element={<Submit />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/postsOuverts" element={<PostsOuverts />} />
+        <Route path="/contact" element={<Contact />} />
 
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>

@@ -27,9 +27,9 @@ function Navbar() {
                 <div className="hidden md:flex space-x-8">
 
                          <div className="flex space-x-8">
-                                <Link to={`${user?.role == 'STUDENT' ? '/offers' : '/login'}`} className="text-gray-600 hover:text-blue-600">Accueil</Link>
+                                <Link to={`/`} className="text-gray-600 hover:text-blue-600">Accueil</Link>
                                 <Link to={`${user?.role == 'STUDENT' ? '/offers' : '/login'}`} className="text-gray-600 hover:text-blue-600">Service</Link>
-                                <Link to={`${user?.role == 'STUDENT' ? '/offers' : '/login'}`} className="text-gray-600 hover:text-blue-600">Contact</Link>
+                                <Link to={`/contact`} className="text-gray-600 hover:text-blue-600">Contact</Link>
                             
                         </div>
                 </div>
