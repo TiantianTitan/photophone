@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  password  String
+  email     String     @unique
+  role      Role
+  etudiant  Etudiant?
+  recruteur Recruteur?
+}
+
+model Etudiant {
+  id            Int                  @id @default(autoincrement())
+  userId        Int                  @unique
+  universiteId  Int?
+  nom           String
+  prenom        String
+  dateNaissance DateTime
+  anneeEtude    String?
+  cv            String?
+  linkToVideo   String?
+  candidatures  Candidature[]
+  universite    Universite?          @relation(fields: [universiteId], references: [id])
+  user          User                 @relation(fields: [userId], references: [id])
+  competences   EtudiantCompetence[]
+  favorites     Favori[]
+}
+
+model Recruteur {
+  id           Int         @id @default(autoincrement())
+  userId       Int         @unique
+  entrepriseId Int?
+  nom          String
+  prenom       String
+  poste        Poste
+  listeOffres  Offre[]
+  entreprise   Entreprise? @relation(fields: [entrepriseId], references: [id])
+  user         User        @relation(fields: [userId], references: [id])
+}
+
+model Entreprise {
+  id         Int         @id @default(autoincrement())
+  nom        String
+  recruteurs Recruteur[]
+}
+
+model Offre {
+  id           Int           @id @default(autoincrement())
+  nom          String
+  salaire      Float
+  description  String
+  localisation String
+  type         String
+  recruteurId  Int
+  favoris      Favori[]
+  recruteur    Recruteur     @relation(fields: [recruteurId], references: [id])
+  candidatures Candidature[]
+}
+
+model Universite {
+  id        Int        @id @default(autoincrement())
+  nom       String
+  etudiants Etudiant[]
+}
+
+model Favori {
+  id         Int      @id @default(autoincrement())
+  etudiantId Int
+  offreId    Int
+  etudiant   Etudiant @relation(fields: [etudiantId], references: [id])
+  offre      Offre    @relation(fields: [offreId], references: [id])
+
+  @@unique([etudiantId, offreId])
+}
+
+model Competence {
+  id        Int                  @id @default(autoincrement())
+  nom       String
+  etudiants EtudiantCompetence[]
+}
+
+model EtudiantCompetence {
+  etudiantId   Int
+  competenceId Int
+  competence   Competence @relation(fields: [competenceId], references: [id])
+  etudiant     Etudiant   @relation(fields: [etudiantId], references: [id])
+
+  @@id([etudiantId, competenceId])
+}
+
+model Candidature {
+  id         Int             @id @default(autoincrement())
+  etudiantId Int
+  offreId    Int
+  etat       EtatCandidature
+  etudiant   Etudiant        @relation(fields: [etudiantId], references: [id])
+  offre      Offre           @relation(fields: [offreId], references: [id])
+
+  @@unique([etudiantId, offreId])
+}
+
+enum Role {
+  STUDENT
+  RECRUITER
+}
+
+enum Rythme {
+  FULL_TIME
+  PART_TIME
+  INTERNSHIP
+}
+
+enum Poste {
+  HR
+  CEO
+  CTO
+}
+
+enum EtatCandidature {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
