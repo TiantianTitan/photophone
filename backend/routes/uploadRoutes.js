@@ -1,19 +1,30 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const multer = require('multer');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const path = require('path');
 
 const router = express.Router();
+
+// 获取下一个可用编号
+const getNextFileIndex = () => {
+  const files = fs.readdirSync('uploads');
+  const indices = files
+    .map(file => parseInt(path.basename(file, path.extname(file))))
+    .filter(num => !isNaN(num));
+  return indices.length > 0 ? Math.max(...indices) + 1 : 1;
+};
 
 // 配置 multer 以存储文件
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // 存储上传文件的目录
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + '-' + file.originalname); // 确保文件名唯一
+    const nextIndex = getNextFileIndex(); // 获取下一个编号
+    const ext = path.extname(file.originalname); // 获取文件扩展名
+    cb(null, `${nextIndex}${ext}`); // 文件命名为 "编号.扩展名"
   }
 });
 
@@ -28,23 +39,22 @@ router.post('/upload', upload.array('files', 10), async (req, res) => {
   }
 
   try {
-    // 将文件记录保存到数据库
     const applicationRecords = req.files.map(file => ({
       userId: parseInt(userId),
       filePath: file.path,
       uploadedAt: new Date(),
-      isCompleted: false, // 默认为未完成
-      isPaid: false       // 默认为未付款
+      isCompleted: false,
+      isPaid: false
     }));
 
     const savedApplications = await prisma.application.createMany({
       data: applicationRecords,
     });
 
-    res.json({ message: 'Files uploaded and saved to applications successfully', applications: savedApplications });
+    res.json({ message: 'Files uploaded and saved successfully', applications: savedApplications });
   } catch (error) {
-    console.error("Error saving application info to database:", error);
-    res.status(500).json({ message: 'Error saving application info to database' });
+    console.error("Error saving file info:", error);
+    res.status(500).json({ message: 'Error saving file info' });
   }
 });
 

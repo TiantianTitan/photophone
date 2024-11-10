@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Sidebar from '../components/Sidebar';
 
 const FileUpload = () => {
   const [files, setFiles] = useState([]);
@@ -35,23 +36,31 @@ const FileUpload = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold mb-6">Upload Photos or Files</h2>
-      <input type="file" multiple onChange={handleFileChange} className="mb-4" />
-      <button
-        onClick={handleUpload}
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Upload
-      </button>
-      {message && <p className="mt-4">{message}</p>}
-      {files.length > 0 && (
-        <ul className="mt-4">
-          {files.map((file, index) => (
-            <li key={index}>{file.name}</li>
-          ))}
-        </ul>
-      )}
+    <div className="flex h-screen">
+      {/* Sidebar */}
+      <div className="w-1/4 bg-gray-200">
+        <Sidebar />
+      </div>
+
+      {/* Main Content */}
+      <div className="w-3/4 p-8">
+        <h2 className="text-3xl font-bold mb-6">Upload Photos or Files</h2>
+        <input type="file" multiple onChange={handleFileChange} className="mb-4" />
+        <button
+          onClick={handleUpload}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Upload
+        </button>
+        {message && <p className="mt-4">{message}</p>}
+        {files.length > 0 && (
+          <ul className="mt-4">
+            {files.map((file, index) => (
+              <li key={index}>{file.name}</li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
