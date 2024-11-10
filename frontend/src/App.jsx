@@ -2,13 +2,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
-import Offers from './pages/Offers';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Submit from './pages/Submit';
-import Settings from './pages/Settings';
-import PostsOuverts from './pages/PostsOuverts';
-import Contact from './pages/Contact';
+import FileUpload from './pages/FileUpload';
+import Application from './pages/Application';
 // import NotFound from './components/Not-found';
 
 function App() {
@@ -17,13 +14,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/offers" element={<Offers />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/submit" element={<Submit />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/postsOuverts" element={<PostsOuverts />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/upload" element={<FileUpload />} />
+        <Route path='/applications' element={<Application/>} />
 
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>

@@ -1,14 +1,23 @@
 // src/components/Sidebar.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiHome, FiFileText, FiMessageSquare, FiHeart, FiCalendar, FiSettings, FiLogOut } from 'react-icons/fi';
 
 const Sidebar = () => {
     const navigate = useNavigate();
+    const [userEmail, setUserEmail] = useState('');
+
+    useEffect(() => {
+        // 获取用户信息并解析邮箱
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.email) {
+            setUserEmail(user.email);
+        }
+    }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('user'); // Remove the user from localStorage
-        navigate('/'); // Redirect to the front page
+        localStorage.removeItem('user'); // 从 localStorage 移除用户信息
+        navigate('/'); // 重定向到主页
     };
 
     return (
@@ -24,36 +33,22 @@ const Sidebar = () => {
                         <FiHome className="mr-3" /> Dashboard
                     </Link>
                 </li>
+
                 <li>
-                    <Link to="/postsOuverts" className="flex items-center text-gray-800 hover:text-blue-500">
-                        <FiFileText className="mr-3" /> Posts Ouverts
+                    <Link to="/upload" className="flex items-center text-gray-800 hover:text-blue-500">
+                        <FiFileText className="mr-3" /> Service
                     </Link>
                 </li>
-                <li>
-                    <Link to="/applications" className="flex items-center text-gray-800 hover:text-blue-500">
-                        <FiMessageSquare className="mr-3" /> Candidatures en cours
-                    </Link>
-                </li>
-                <li>
-                    <Link to="/messages" className="flex items-center text-gray-800 hover:text-blue-500">
-                        <FiMessageSquare className="mr-3" /> Messenger
-                    </Link>
-                </li>
-                <li>
-                    <Link to="/favourites" className="flex items-center text-gray-800 hover:text-blue-500">
-                        <FiHeart className="mr-3" /> Favourites
-                    </Link>
-                </li>
-                <li>
-                    <Link to="/calendar" className="flex items-center text-gray-800 hover:text-blue-500">
-                        <FiCalendar className="mr-3" /> Calendar
-                    </Link>
-                </li>
-                <li>
-                    <Link to="/settings" className="flex items-center text-gray-800 hover:text-blue-500">
-                        <FiSettings className="mr-3" /> Settings
-                    </Link>
-                </li>
+
+                {/* 根据用户邮箱显示FeedBack菜单项 */}
+                {userEmail === 'test@gmail.com' && (
+                    <li>
+                        <Link to="/applications" className="flex items-center text-gray-800 hover:text-blue-500">
+                            <FiMessageSquare className="mr-3" /> FeedBack
+                        </Link>
+                    </li>
+                )}
+
                 <li>
                     <button
                         onClick={handleLogout}
